@@ -1,0 +1,25 @@
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# C++ build artifacts
+initial/main
+pack/main
+test_lms/main
+main_asan
+probe_bin
+*.o
+*.out
+*.exe
+*.dSYM/
+
+# Generated probe source and logs
+pack/probe.cpp
+pack/probe_log.txt
+test_lms/probe.cpp
+test_lms/probe_log.txt
+
+# Editor-specific local files
+.vscode/
+**/.vscode/
+
