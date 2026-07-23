@@ -23,3 +23,5 @@ test_lms/probe_log.txt
 .vscode/
 **/.vscode/
 
+# Locally shared test packages
+pack.zip
