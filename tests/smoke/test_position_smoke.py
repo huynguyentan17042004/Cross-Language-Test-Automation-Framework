@@ -27,7 +27,7 @@ def position_executable(
     ("arguments", "expected"),
     [
         (("construct-default",), "(0,0)"),
-        (("construct-values", 1, 15), "(1,16)"),
+        (("construct-values", 1, 15), "(1,15)"),
         (("construct-values", -1, -1), "(-1,-1)"),
         (("construct-string", "(7,9)"), "(7,9)"),
         (("set-row", 1, 2, 5), "(5,2)"),
