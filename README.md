@@ -77,9 +77,14 @@ Standard Pytest marker expressions remain available for combinations:
 - Compiler success and diagnostic preservation.
 - Process exit, stdout/stderr capture, missing command, and timeout behavior.
 - Position functional scenarios through a C++ harness.
+- MapElement constructor/getter scenarios and five independently calculated
+  ground-obstacle damage requirements.
+- Map validity decision table for path, obstacle, ground obstacle, FlyTeam,
+  GroundTeam, threshold boundaries, and out-of-bounds positions.
 - Position public/private structural probes.
 - Legacy integration cases 19-22 execute from the isolated snapshot.
 - Position harness runs under AddressSanitizer.
 
-The next learning phase is to inspect this framework file by file, then create
-the first Git branch and commit intentionally before adding more domain tests.
+Pull requests build the C++ suite and run the unit layer on an Ubuntu runner.
+CI publishes `reports/unit.xml` as the `unit-test-report` artifact even when
+the Pytest step fails. The next CI milestone is a separate structural-test job.
