@@ -13,7 +13,12 @@
 | MAP-003 | REQ-MAP | unit | GROUND_OBSTACLE for FlyTeam | FlyTeam ignores ground damage threshold | automated |
 | MAP-004 | REQ-MAP | unit/boundary | GroundTeam damage equals/just exceeds required damage | valid only when damage is strictly greater | automated |
 | MAP-005 | REQ-MAP | unit/negative | negative and upper out-of-bounds positions | invalid before element lookup | automated |
-| OOP-POS-001 | REQ-OOP | structural | `getRow()` is public | section 3.3 | automated |
-| OOP-POS-002 | REQ-OOP | structural | `r_` is private | section 3.3 | automated |
+| OOP-POS-001 | REQ-OOP | structural | `getRow()` and `getCol()` are public | compile succeeds | automated |
+| OOP-POS-002 | REQ-OOP | structural | `r_` and `c_` are private | compiler diagnostic is specifically private access | automated |
+| OOP-MAP-001 | REQ-OOP | structural | `MapElement::req_dmg` is private | compiler diagnostic is specifically private access | automated |
+| OOP-MOVE-001 | REQ-OOP | structural | `MovingObject::index` is protected | compiler diagnostic is specifically protected access | automated |
+| OOP-INHERIT-001 | REQ-OOP | structural | FlyTeam/GroundTeam inherit Warrior | `std::is_base_of` static assertions compile | automated |
+| OOP-ABSTRACT-001 | REQ-OOP | structural | MovingObject is abstract | `std::is_abstract` static assertion compiles | automated |
+| OOP-DTOR-001 | REQ-OOP | structural | MovingObject has virtual destructor | `std::has_virtual_destructor` static assertion compiles | automated |
 | GAME-BASELINE-001 | REQ-GAME | integration | legacy cases 19-22 execute | process evidence only; not full correctness | automated |
 | MEM-POS-001 | REQ-MEM | memory | Position harness under ASan | no sanitizer error/process failure | automated |

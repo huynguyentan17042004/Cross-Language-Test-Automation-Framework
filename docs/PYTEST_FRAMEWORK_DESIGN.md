@@ -20,7 +20,7 @@ The framework contains:
 - `framework/models.py`: immutable compile, run, and probe evidence.
 - `framework/compiler.py`: deterministic C++ argument-list compilation.
 - `framework/executor.py`: safe execution without `shell=True`.
-- `framework/probes.py`: public/private/protected/contract/toolchain diagnosis.
+- `framework/probes.py`: compile/private/protected/contract/toolchain diagnosis.
 - `framework/assertions.py`: readable compile and execution failures.
 - `conftest.py`: shared compiler, build, harness, and runner fixtures.
 - `cpp_harness/`: small C++ adapters grouped by domain.
@@ -47,4 +47,3 @@ The framework contains:
 6. Local all-tests verification and JUnit report.
 7. Git/GitHub learning.
 8. Incremental GitHub Actions jobs.
-
