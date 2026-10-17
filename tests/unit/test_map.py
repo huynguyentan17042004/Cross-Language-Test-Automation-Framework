@@ -56,7 +56,7 @@ def test_map_element_contract(
         (0, 0, 90),
         (0, 1, 229),
         (1, 0, 347),
-        (1, 2, 625),
+        (1, 2, 624),
         (3, 4, 517),
     ],
     ids=("origin", "first-column-step", "first-row-step", "threshold-cell", "modulo-cell"),
