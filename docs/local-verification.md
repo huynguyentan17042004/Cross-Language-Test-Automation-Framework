@@ -14,14 +14,16 @@ Verified on 2026-10-17 in the repository-local virtual environment.
 | Command slice | Result |
 |---|---:|
 | `python -m pip check` | no broken requirements |
-| `python -m pytest -q -m framework` | 10 passed |
-| `python -m pytest -q -m smoke` | 9 passed |
-| `python -m pytest -q -m structural` | 2 passed |
-| `python -m pytest -q -m integration` | 1 passed |
-| `python -m pytest -q -m memory` | 1 passed |
-| `python -m pytest -q --junitxml=reports/pytest.xml` | 23 passed |
+| `python -m pytest --layer framework` | 10 passed |
+| `python -m pytest --layer smoke` | 9 passed |
+| `python -m pytest --layer unit --junitxml=reports/unit.xml` | 26 passed |
+| `python -m pytest --layer structural` | 2 passed |
+| `python -m pytest --layer integration` | 1 passed |
+| `python -m pytest --layer memory` | 1 passed |
+| `python -m pytest --layer all` | 40 passed |
 
 The marker totals overlap because every smoke test is also marked `unit`.
+The unit report contains Position, MapElement, ground-obstacle damage formula,
+and `Map::isValid` decision-table evidence.
 The integration baseline proves cases 19-22 execute successfully; it is not a
 claim that every printed value is specification-correct.
-
