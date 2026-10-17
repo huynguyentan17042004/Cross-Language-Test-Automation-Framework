@@ -81,10 +81,11 @@ Standard Pytest marker expressions remain available for combinations:
   ground-obstacle damage requirements.
 - Map validity decision table for path, obstacle, ground obstacle, FlyTeam,
   GroundTeam, threshold boundaries, and out-of-bounds positions.
-- Position public/private structural probes.
+- Ten isolated structural probes for public/private/protected access,
+  inheritance, abstract base-class status, and virtual destruction.
 - Legacy integration cases 19-22 execute from the isolated snapshot.
 - Position harness runs under AddressSanitizer.
 
-Pull requests build the C++ suite and run the unit layer on an Ubuntu runner.
-CI publishes `reports/unit.xml` as the `unit-test-report` artifact even when
-the Pytest step fails. The next CI milestone is a separate structural-test job.
+Pull requests run independent unit and structural jobs on Ubuntu runners. CI
+publishes JUnit evidence plus per-probe compiler diagnostics even when a Pytest
+step fails. The next CI milestone is an independent integration-test job.

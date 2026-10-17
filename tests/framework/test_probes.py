@@ -33,9 +33,9 @@ def compile_result(
     )
 
 
-def test_successful_probe_is_public(tmp_path: Path) -> None:
+def test_successful_probe_compiles(tmp_path: Path) -> None:
     result = compile_result(tmp_path, returncode=0, create_output=True)
-    assert classify_compile_result(result) is ProbeClassification.PUBLIC
+    assert classify_compile_result(result) is ProbeClassification.COMPILES
 
 
 @pytest.mark.parametrize(
