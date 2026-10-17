@@ -24,4 +24,4 @@ jobs:
 
       - name: Compile legacy C++ suite
         working-directory: sut/legacy
-        run: g++ -std=c++11 -O0 -g main.cpp dragon_missing.cpp -I . -o dragon_tests
+        run: g++ -std=c++11 -O0 -g main.cpp dragon.cpp -I . -o dragon_tests
