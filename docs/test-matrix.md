@@ -25,4 +25,15 @@
 | GAME-ENCOUNTER-001 | REQ-ENCOUNTER | integration | FlyTeam1 and DragonLord share `(0,0)` | encounter message and defeated state | automated |
 | GAME-STOP-001 | REQ-STOP | integration | both FlyTeams have HP `1` | `isStop()` is true | automated |
 | GAME-BASELINE-019–022 | REQ-GAME | integration/slow | select and execute legacy cases 19-22 independently | case-specific begin/end process evidence; not full correctness | automated |
+| WAR-001 | REQ-WAR | regression | HP/DMG lower and upper constructor boundaries | clamp to HP 0–500 and DMG 0–900 | automated |
+| WAR-002 | REQ-WAR | regression | set HP at 0, 1, 2 and above 500 | v1.1 exhausted state and cap | automated |
+| MOVE-001 | REQ-FLY/REQ-GROUND | regression | normal, opposite fallback, blocked both directions | spec movement decision table | automated |
+| LORD-001 | REQ-LORD | regression/boundary | derived position and Manhattan distance 5 vs 6 | calculated coordinates and swap rule | automated |
+| SMART-001 | REQ-SMART | regression | four directions, tie priority, SD3 stationary | U→R→D→L priority and SD3 contract | automated |
+| SMART-002 | REQ-SMART | regression/boundary | spawn count 0, 4, 5, 6, 10 | multiples of five successful moves | automated |
+| ITEM-001 | REQ-ITEM | regression/boundary | scale 400/401, herb 100/101, trap actor | independently calculated exact-boundary effects | automated |
+| BAG-001 | REQ-BAG | regression/boundary | capacity 5/7 and overflow | insertion result and bag count | automated |
+| BAG-002 | REQ-BAG | regression | head insertion and retrieval by usability/type | explicit item ordering | automated |
+| ARRAY-001 | REQ-ARRAY | regression | below/at/over capacity and invalid index | size, full state, add result, null lookup | automated |
+| MEM-DOMAIN-001 | REQ-MEM | memory/slow | Map, Config, Program, Bag, SmartDragon, Array lifecycles | clean ASan exit and diagnostics | automated |
 | MEM-POS-001 | REQ-MEM | memory | Position harness under ASan | no sanitizer error/process failure | automated |

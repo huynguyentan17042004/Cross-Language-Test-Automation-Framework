@@ -2,7 +2,8 @@
 
 A Python/Pytest-based automated testing framework for validating the **Dragon Warriors C++ object-oriented application**. The framework compiles and tests the C++ code through focused test layers, while **GitHub Actions CI** validates pull requests and retains test reports and diagnostics.
 
-> **Scope:** This project currently implements **Continuous Integration (CI)** and automated testing. It does **not** implement automated deployment (CD).
+> **Scope:** The project implements CI plus optional console release packaging.
+> It does not deploy a web service or publish a GitHub Release automatically.
 
 ## Tech Stack
 
@@ -28,17 +29,16 @@ Pull request -> python-driven-version
                  v
           GitHub Actions
                  |
-       +---------+----------+
-       |         |          |
-       v         v          v
-    Unit      Structural  Integration
-    tests     tests       tests
-       |         |          |
-       +---------+----------+
+       +---------+----------+------------+
+       |         |          |            |
+       v         v          v            v
+    Unit      Structural  Integration  Regression
+    tests     tests       tests        GCC + Clang
+       |         |          |            |
+       +---------+----------+------------+
                  |
                  v
-       JUnit XML + diagnostics
-       uploaded as CI artifacts
+         Required quality gate
                  |
                  v
          Review results / merge
@@ -51,8 +51,16 @@ Pull request -> python-driven-version
 | `unit-tests` | Compiles the legacy C++ suite, then runs Pytest's unit layer | `reports/unit.xml` |
 | `structural-tests` | Checks compile-time OOP structural contracts | `reports/structural.xml` and structural diagnostics |
 | `integration-tests` | Checks configuration and integrated game scenarios | `reports/integration.xml` and integration diagnostics |
+| `regression-tests` | Runs domain regression on GCC and Clang | compiler-specific `reports/regression.xml` |
+| `quality-gate` | Requires every PR test job to succeed | stable branch-protection check |
 
-All jobs use Ubuntu runners and have a 10-minute job timeout. Artifact-upload steps use `if: always()` so reports/diagnostics can be retained even after test failures (provided files exist).
+Jobs use Ubuntu runners, pip caching, least-privilege permissions, concurrency
+control, and explicit timeouts. Artifact-upload steps use `if: always()` so
+reports/diagnostics can be retained after test failures when files exist.
+
+The separate nightly workflow runs AddressSanitizer lifecycle tests. The
+manual/tag release workflow packages a platform-specific executable, configs,
+JUnit evidence, manifest, and SHA-256 checksum.
 
 **CI techniques demonstrated:** pull-request validation, automated C++ build verification, test-layer separation, automated regression checks, machine-readable test reporting, failure diagnostics, and artifact retention.
 
@@ -98,7 +106,10 @@ The default CLI shows every test name, its tags, the five slowest durations, and
 # Configuration, game scenarios, and selectable legacy cases
 .venv/bin/python -m pytest --layer integration
 
-# AddressSanitizer example
+# Warrior, movement, dragon, item, bag, and array regression
+.venv/bin/python -m pytest --layer regression
+
+# AddressSanitizer lifecycle suite
 .venv/bin/python -m pytest --layer memory
 
 # Tests tagged as intentionally slower
@@ -129,7 +140,12 @@ Standard Pytest marker expressions remain available for combinations:
 - Configuration parsing and exact `Configuration::str()` formatting.
 - Specification-traceable movement, encounter, and stop-condition scenarios using temporary configuration files.
 - Independently executed legacy integration cases 19–22 using a case argument.
-- Position harness execution under AddressSanitizer.
+- Forty-eight regression scenarios across Warrior, movement, DragonLord,
+  SmartDragon, items, bags, and ArrayMovingObject.
+- Position, Map, Configuration, Program, Bag, SmartDragon, and Array lifecycle
+  checks under AddressSanitizer.
+- Versioned release packaging with sample configs, manifest, test evidence, and
+  checksum.
 
 ## Test result boundaries
 
@@ -143,8 +159,10 @@ Standard Pytest marker expressions remain available for combinations:
 1. Create a focused feature/lab branch from `python-driven-version`.
 2. Implement changes and run the relevant Pytest layer locally.
 3. Push the branch and open a pull request targeting `python-driven-version`.
-4. Review the GitHub Actions unit, structural, and integration job results.
+4. Review unit, structural, integration, GCC/Clang regression, and quality-gate results.
 5. Inspect uploaded JUnit XML reports and diagnostics when needed.
 6. Merge after review and required checks pass.
 
-> The workflow performs **CI checks only**. Deployment/release automation and any mandatory branch-protection rules are outside the scope documented here.
+Branch-protection setup is documented in
+[`docs/branch-protection.md`](docs/branch-protection.md). Reliability decisions,
+failure triage, coverage gaps, and release usage are documented under `docs/`.
