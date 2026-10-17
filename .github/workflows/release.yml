@@ -1,0 +1,73 @@
+name: Dragon Warriors Release Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version label, for example 1.0.0
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test-build-package:
+    name: Test and package release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CXX: g++
+      SOURCE_DATE_EPOCH: "1700000000"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run complete test suite
+        run: python -m pytest --layer all --junitxml=reports/release-tests.xml
+
+      - name: Resolve release version
+        id: version
+        env:
+          MANUAL_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$MANUAL_VERSION" ]; then
+            echo "value=$MANUAL_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build release package
+        run: >-
+          python scripts/build_release.py
+          --version "${{ steps.version.outputs.value }}"
+          --test-report reports/release-tests.xml
+          --output-dir dist
+
+      - name: Upload versioned release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dragon-warriors-${{ steps.version.outputs.value }}
+          path: |
+            dist/*.tar.gz
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 30

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
 import pytest
@@ -80,11 +80,13 @@ def run_binary() -> Callable[..., RunResult]:
         *args: object,
         cwd: Path | None = None,
         timeout: float = 10.0,
+        env: Mapping[str, str] | None = None,
     ) -> RunResult:
         return run_command(
             [executable, *(str(arg) for arg in args)],
             cwd=cwd,
             timeout=timeout,
+            env=env,
         )
 
     return run_one

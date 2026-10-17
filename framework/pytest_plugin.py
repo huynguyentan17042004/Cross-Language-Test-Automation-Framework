@@ -12,6 +12,7 @@ TAG_ORDER = (
     "unit",
     "structural",
     "integration",
+    "regression",
     "memory",
     "slow",
 )
@@ -118,4 +119,3 @@ def tags_from_report(report: Any) -> tuple[str, ...]:
 def format_report_tags(report: Any) -> str:
     tags = tags_from_report(report)
     return "[" + ", ".join(tag.upper() for tag in tags) + "]"
-
