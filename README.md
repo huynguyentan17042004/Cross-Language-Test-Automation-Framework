@@ -41,7 +41,7 @@ and a per-tag summary. Use `-q` only when you intentionally want compact output.
 # Compile-time OOP checks
 .venv/bin/python -m pytest --layer structural
 
-# Existing full-program baseline
+# Configuration, game scenarios, and selectable legacy cases
 .venv/bin/python -m pytest --layer integration
 
 # AddressSanitizer example
@@ -83,9 +83,12 @@ Standard Pytest marker expressions remain available for combinations:
   GroundTeam, threshold boundaries, and out-of-bounds positions.
 - Ten isolated structural probes for public/private/protected access,
   inheritance, abstract base-class status, and virtual destruction.
-- Legacy integration cases 19-22 execute from the isolated snapshot.
+- Complete configuration parsing and exact `Configuration::str()` formatting.
+- Spec-traceable movement, encounter, and stop-condition scenarios using
+  temporary configuration files.
+- Legacy integration cases 19-22 execute independently through a case argument.
 - Position harness runs under AddressSanitizer.
 
-Pull requests run independent unit and structural jobs on Ubuntu runners. CI
-publishes JUnit evidence plus per-probe compiler diagnostics even when a Pytest
-step fails. The next CI milestone is an independent integration-test job.
+Pull requests run independent unit, structural, and integration jobs on Ubuntu
+runners. CI publishes JUnit evidence plus compiler/process diagnostics even
+when a Pytest step fails.
