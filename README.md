@@ -1,11 +1,66 @@
-# Dragon Warriors Pytest Framework
+# Dragon Warriors — Automated Testing Framework with GitHub Actions CI
 
-An isolated Pytest-driven framework for compiling and testing the Dragon
-Warriors C++ assignment. The original repository remains unchanged.
+A Python/Pytest-based automated testing framework for validating the **Dragon Warriors C++ object-oriented application**. The framework compiles and tests the C++ code through focused test layers, while **GitHub Actions CI** validates pull requests and retains test reports and diagnostics.
+
+> **Scope:** This project currently implements **Continuous Integration (CI)** and automated testing. It does **not** implement automated deployment (CD).
+
+## Tech Stack
+
+- **Application under test:** C++11
+- **Test automation:** Python 3.11+, Pytest
+- **Build/compiler:** `g++` (or set `CXX`)
+- **CI:** GitHub Actions, Ubuntu runners, Python 3.13 in CI
+- **Reports:** JUnit XML, GitHub Actions artifacts
+- **Version control:** Git, feature/lab branches, pull requests
+
+## Continuous Integration (CI)
+
+The workflow is defined in [`.github/workflows/ci.yml`](.github/workflows/ci.yml). It runs when a pull request targets the `python-driven-version` branch, and it can also be started manually with `workflow_dispatch`.
+
+### Pipeline flow
+
+```text
+Developer creates a feature/lab branch
+                 |
+                 v
+Pull request -> python-driven-version
+                 |
+                 v
+          GitHub Actions
+                 |
+       +---------+----------+
+       |         |          |
+       v         v          v
+    Unit      Structural  Integration
+    tests     tests       tests
+       |         |          |
+       +---------+----------+
+                 |
+                 v
+       JUnit XML + diagnostics
+       uploaded as CI artifacts
+                 |
+                 v
+         Review results / merge
+```
+
+### Independent CI jobs
+
+| Job | What it validates | Report/artifacts |
+| --- | --- | --- |
+| `unit-tests` | Compiles the legacy C++ suite, then runs Pytest's unit layer | `reports/unit.xml` |
+| `structural-tests` | Checks compile-time OOP structural contracts | `reports/structural.xml` and structural diagnostics |
+| `integration-tests` | Checks configuration and integrated game scenarios | `reports/integration.xml` and integration diagnostics |
+
+All jobs use Ubuntu runners and have a 10-minute job timeout. Artifact-upload steps use `if: always()` so reports/diagnostics can be retained even after test failures (provided files exist).
+
+**CI techniques demonstrated:** pull-request validation, automated C++ build verification, test-layer separation, automated regression checks, machine-readable test reporting, failure diagnostics, and artifact retention.
+
+[View CI runs](https://github.com/huynguyentan17042004/Dragon-Warriors-OOP-Test-Suite/actions)
 
 ## Requirements
 
-- Python 3.11 or newer
+- Python **3.11 or newer**
 - A C++ compiler available as `g++`, or set `CXX`
 - macOS or Linux for the current local workflow
 
@@ -13,7 +68,7 @@ Warriors C++ assignment. The original repository remains unchanged.
 
 ```bash
 cd dragon_warriors_pytest_framework
-/opt/anaconda3/bin/python3 -m venv .venv
+python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt
 ```
 
@@ -23,8 +78,7 @@ Use the same interpreter for every Python command:
 .venv/bin/python -m pytest
 ```
 
-The default CLI shows every test name, its tags, the five slowest durations,
-and a per-tag summary. Use `-q` only when you intentionally want compact output.
+The default CLI shows every test name, its tags, the five slowest durations, and a per-tag summary. Use `-q` only when you intentionally want compact output.
 
 ## Run separate test layers
 
@@ -53,7 +107,7 @@ and a per-tag summary. Use `-q` only when you intentionally want compact output.
 # Full suite with detailed output
 .venv/bin/python -m pytest --layer all
 
-# JUnit evidence for later CI use
+# JUnit evidence for local/CI review
 .venv/bin/python -m pytest --layer all --junitxml=reports/pytest.xml
 ```
 
@@ -64,31 +118,33 @@ Standard Pytest marker expressions remain available for combinations:
 .venv/bin/python -m pytest -m "unit and not slow"
 ```
 
-## Result boundaries
-
-- A successful compile does not prove functional correctness.
-- Exit code 0 does not prove stdout matches the specification.
-- A compiler failure is not automatically proof that a field is private.
-- Unknown specification behavior is recorded in `docs/spec-decisions.md`, not
-  guessed into a mandatory assertion.
-
-## Current automated evidence
+## Current automated test coverage
 
 - Compiler success and diagnostic preservation.
 - Process exit, stdout/stderr capture, missing command, and timeout behavior.
 - Position functional scenarios through a C++ harness.
-- MapElement constructor/getter scenarios and five independently calculated
-  ground-obstacle damage requirements.
-- Map validity decision table for path, obstacle, ground obstacle, FlyTeam,
-  GroundTeam, threshold boundaries, and out-of-bounds positions.
-- Ten isolated structural probes for public/private/protected access,
-  inheritance, abstract base-class status, and virtual destruction.
-- Complete configuration parsing and exact `Configuration::str()` formatting.
-- Spec-traceable movement, encounter, and stop-condition scenarios using
-  temporary configuration files.
-- Legacy integration cases 19-22 execute independently through a case argument.
-- Position harness runs under AddressSanitizer.
+- MapElement constructor/getter scenarios and five independently calculated ground-obstacle damage requirements.
+- Map validity decision table covering paths, obstacles, ground obstacles, FlyTeam, GroundTeam, threshold boundaries, and out-of-bounds positions.
+- Ten isolated structural probes for public/private/protected access, inheritance, abstract base-class status, and virtual destruction.
+- Configuration parsing and exact `Configuration::str()` formatting.
+- Specification-traceable movement, encounter, and stop-condition scenarios using temporary configuration files.
+- Independently executed legacy integration cases 19–22 using a case argument.
+- Position harness execution under AddressSanitizer.
 
-Pull requests run independent unit, structural, and integration jobs on Ubuntu
-runners. CI publishes JUnit evidence plus compiler/process diagnostics even
-when a Pytest step fails.
+## Test result boundaries
+
+- Successful compilation does **not** prove functional correctness.
+- Process exit code `0` does **not** prove stdout matches the specification.
+- A compiler failure is **not** automatically proof that a field is private.
+- Unknown specification behavior is recorded in [`docs/spec-decisions.md`](docs/spec-decisions.md), not guessed into mandatory assertions.
+
+## Development workflow
+
+1. Create a focused feature/lab branch from `python-driven-version`.
+2. Implement changes and run the relevant Pytest layer locally.
+3. Push the branch and open a pull request targeting `python-driven-version`.
+4. Review the GitHub Actions unit, structural, and integration job results.
+5. Inspect uploaded JUnit XML reports and diagnostics when needed.
+6. Merge after review and required checks pass.
+
+> The workflow performs **CI checks only**. Deployment/release automation and any mandatory branch-protection rules are outside the scope documented here.
